@@ -5,7 +5,7 @@ function createMap(earthquakes) {
       attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
       maxZoom: 18,
       id: "light-v10",
-      accessToken: "pk.eyJ1IjoiYWFyYW56YXp1dSIsImEiOiJja2N4czF3cTQwMzBoMnJuaHB4Ympoa3pqIn0.eljAoRIWk2NBRNN26ymnNg"
+      accessToken: API_KEY
     });
   
     // Create a baseMaps object to hold the lightmap layer
