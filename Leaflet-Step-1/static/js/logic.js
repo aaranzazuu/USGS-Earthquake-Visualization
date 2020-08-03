@@ -20,45 +20,60 @@ function createMap(earthquakes) {
   
     // Create the map object with options
     var map = L.map("map", {
-      center: [34, -118],
-      zoom: 5,
+      center: [34, 0],
+      zoom: 3,
       layers: [lightmap, earthquakes]
     });
   
     // Create a layer control, pass in the baseMaps and overlayMaps. Add the layer control to the map
     L.control.layers(baseMaps, overlayMaps, {
-      collapsed: false
+        position: "topright",
+        collapsed: false
     }).addTo(map);
   }
   
-  function createMarkers(response) {
+  function createCircles(response) {
   
     // Pull the "coordinates" property off of response.data
     var coordinates = []
-    var markers = []
+    var circles = []
     for (x in response.features) {
         latitude = response.features[x].geometry.coordinates[1]
         longitude = response.features[x].geometry.coordinates[0]
-        var marker = L.marker([latitude, longitude])
-        coordinates.push([latitude, longitude])
-        markers.push(marker)
+        mag = response.features[x].properties.mag
+        if (mag > 5) {
+            color = "#fa0505",
+            radius = 50000
+        }
+        else if (mag > 4) {
+            color = "#fa7f05",
+            radius = 40000
+        }
+        else if (mag > 3) {
+            color = "#faa805",
+            radius = 30000
+        }
+        else if (mag > 2) {
+            color = "#fac505",
+            radius = 20000
+        }
+        else if (mag > 2) {
+            color = "#fae605",
+            radius = 10000
+        }
+        else {color = "#d5fa05",
+        radius = 5000}
+        var circle = L.circle([latitude, longitude], radius, {color: color, fillColor: color, opacity: 2}).bindPopup("<h3>Location: " + response.features[x].properties.place + "<h3><h3>Magnitude: " + mag + "</h3>")
+        circles.push(circle)
     }
-    console.log(coordinates)
+    // console.log(location)
+    // console.log()
   
-    // var markers = L.marker(coordinates) 
-    // console.log(markers)
-    for (coordinate in coordinates) {
-    //   // For each station, create a marker and bind a popup with the station's name
-      var marker = L.marker(coordinate)
-    //   console.log(marker)
-    //   // Add the marker to the markers array
-    //   ;
-    }
   
     // Create a layer group made from the markers array, pass it into the createMap function
-    createMap(L.layerGroup(markers));
+    createMap(L.layerGroup(circles));
   }
   
   
   // Perform an API call to the API to get station information. Call createMarkers when complete
-  d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson", createMarkers);
+  d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson", createCircles);
